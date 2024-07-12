@@ -29,14 +29,6 @@ class AppointmentSchema(SQLAlchemyAutoSchema):
 appointment_schema = AppointmentSchema()
 appointments_schema = AppointmentSchema(many=True)
 
-class BlogPostSchema(SQLAlchemyAutoSchema):
-    class Meta:
-        model = BlogPost
-        load_instance = True
-        include_fk = True
-
-blog_post_schema = BlogPostSchema()
-blog_posts_schema = BlogPostSchema(many=True)
 
 class ContactFormSubmissionSchema(SQLAlchemyAutoSchema):
     class Meta:

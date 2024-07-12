@@ -12,6 +12,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     is_psychologist = db.Column(db.Boolean, default=False)
+    role = db.Column(db.String(20))
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -27,15 +29,6 @@ class Appointment(db.Model):
     notes = db.Column(db.Text, nullable=True)
 
     client = db.relationship('User', backref=db.backref('appointments', lazy=True))
-
-class BlogPost(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    publication_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    author = db.relationship('User', backref=db.backref('posts', lazy=True))
 
 class ContactFormSubmission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
