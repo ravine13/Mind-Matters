@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt  
 import os
 from models import db
-# from Auth import auth_bp
+from Auth import auth_bp
 from routes.users import user_bp
 from serializer import serializer_bp
 from routes.contactform import contact_form_bp
@@ -27,7 +27,7 @@ def create_app():
     bcrypt.init_app(app)
     migrate = Migrate(app, db)
 
-    # app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(serializer_bp)
     app.register_blueprint(appointment_bp)
