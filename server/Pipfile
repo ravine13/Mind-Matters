@@ -25,6 +25,7 @@ flask-mail = "*"
 api-jwt = "*"
 marshmallow = "*"
 requests = "*"
+decorators = "*"
 
 [dev-packages]
 

@@ -3,7 +3,7 @@ from flask_restful import Api, Resource, reqparse
 from datetime import datetime
 from models import ContactFormSubmission, db
 from serializer import ContactFormSubmissionSchema, contact_form_submission_schema, contact_form_submissions_schema
-from decorators import admin_required
+
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 contact_form_bp = Blueprint('contact_form_bp', __name__)
@@ -27,8 +27,7 @@ class ContactFormSubmissions(Resource):
         submissions = ContactFormSubmission.query.all()
         result = contact_form_submissions_schema.dump(submissions)
         return make_response(jsonify(result), 200)
-
-    @admin_required
+    
     def post(self):
         data = contact_form_parser.parse_args()
         new_submission = ContactFormSubmission(**data)
@@ -39,7 +38,6 @@ class ContactFormSubmissions(Resource):
 api.add_resource(ContactFormSubmissions, '/contact-form-submissions')
 
 class ContactFormSubmissionByID(Resource):
-    @admin_required
     def delete(self, id):
         submission = ContactFormSubmission.query.get(id)
         if not submission:
@@ -50,7 +48,6 @@ class ContactFormSubmissionByID(Resource):
 
  
     @jwt_required()
-    @admin_required
     def patch(self, id):
         contactform = ContactFormSubmission.query.get(id)
         if not contactform:

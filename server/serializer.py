@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, make_response, jsonify
 from flask_marshmallow import Marshmallow
 from flask_restful import Resource, Api, reqparse, abort
 from flask_bcrypt import Bcrypt
-from models import User, ContactFormSubmission, Appointment, BlogPost
+from models import User, ContactFormSubmission, Appointment
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
 from marshmallow.fields import Nested
 
