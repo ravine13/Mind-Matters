@@ -1,8 +1,8 @@
-"""initial commit
+"""Switch to bcrypt for password hashing
 
-Revision ID: 84cc8835c1eb
+Revision ID: f2a865293928
 Revises: 
-Create Date: 2024-07-12 11:01:51.024896
+Create Date: 2024-07-13 15:46:54.236967
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '84cc8835c1eb'
+revision = 'f2a865293928'
 down_revision = None
 branch_labels = None
 depends_on = None

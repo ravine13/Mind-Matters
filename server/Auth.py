@@ -48,7 +48,7 @@ class UserRegister(Resource):
             return abort(422, detail='Passwords do not match')
 
         # Fetch the role
-        role = Role.query.filter_by(name=data['role']).first()
+        role = User.query.filter_by(name=data['role']).first()
         if not role:
             return abort(400, detail='Invalid role')
 
@@ -63,6 +63,7 @@ class UserRegister(Resource):
         return {'detail': f'User {data["email"]} has been created successfully'}
 
 api.add_resource(UserRegister, '/register')
+
 
 class UserLogin(Resource):
     @jwt_required()

@@ -1,10 +1,10 @@
-from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from flask_bcrypt import Bcrypt
 from datetime import datetime
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,12 +14,18 @@ class User(db.Model):
     is_psychologist = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(20))
 
-
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return bcrypt.check_password_hash(self.password_hash, password)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'role': self.role,
+        }
 
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
