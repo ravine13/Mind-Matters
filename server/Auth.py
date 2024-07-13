@@ -10,7 +10,7 @@ from flask_jwt_extended import (
 )
 from flask_restful import Resource, Api, reqparse
 
-from models import User, db, TokenBlocklist, Role
+from models import User, db, TokenBlocklist
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()

@@ -27,7 +27,6 @@ appointment_schema = AppointmentSchema()
 appointments_schema = AppointmentSchema(many=True)
 
 class Appointments(Resource):
-    @jwt_required()
     def get(self):
         appointments = Appointment.query.all()
         result = appointments_schema.dump(appointments)
@@ -44,7 +43,6 @@ class Appointments(Resource):
 api.add_resource(Appointments, '/appointments')
 
 class AppointmentByID(Resource):
-    @jwt_required()
     def get(self, id):
         appointment = Appointment.query.get(id)
         if not appointment:

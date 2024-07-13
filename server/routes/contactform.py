@@ -38,6 +38,13 @@ class ContactFormSubmissions(Resource):
 api.add_resource(ContactFormSubmissions, '/contact-form-submissions')
 
 class ContactFormSubmissionByID(Resource):
+    def get(self, id):
+        contact_form = ContactFormSubmission.query.get(id)
+        if not contact_form:
+            return make_response(jsonify({'error': 'contact form  not found'}), 404)
+        return make_response(jsonify(contact_form_submission_schema.dump(contact_form)), 200)
+    
+    @jwt_required()
     def delete(self, id):
         submission = ContactFormSubmission.query.get(id)
         if not submission:
@@ -60,4 +67,6 @@ class ContactFormSubmissionByID(Resource):
         
         db.session.commit()
         return make_response(jsonify(contact_form_submission_schema.dump(contactform)), 200)
+
+api.add_resource(ContactFormSubmissionByID, '/contact-form-submission/<int:id>')
 
