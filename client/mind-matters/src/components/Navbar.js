@@ -1,17 +1,17 @@
-import { Navbar, Button, ListGroup } from 'flowbite-react'
-import { useContext, useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { UserContext } from '../context/UserContext'
+import { Navbar, Button, ListGroup } from 'flowbite-react';
+import { useContext, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 export default function Nav() {
-  const { currentUser, logout } = useContext(UserContext)
-  const [isVisible, setIsVisible] = useState(false)
+  const { currentUser, logout } = useContext(UserContext);
+  const [isVisible, setIsVisible] = useState(false);
 
   function handleEnter() {
-    setIsVisible(true)
+    setIsVisible(true);
   }
   function handleLeave() {
-    setIsVisible(false)
+    setIsVisible(false);
   }
 
   return (
@@ -27,31 +27,35 @@ export default function Nav() {
             to="/">
             Home
           </NavLink>
-          <NavLink
-            className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
-            to="/doctors">
-            Doctors
-          </NavLink>
-          {currentUser && <NavLink
-            className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
-            to="/bookings">
-            Bookings
-          </NavLink>}
+          {currentUser && (
+            <NavLink
+              className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
+              to="/bookings">
+              Bookings
+            </NavLink>
+          )}
           {currentUser ? (
             <div className="relative">
               <button onClick={handleEnter}>
-                <div onMouseEnter={handleEnter} onMouseLeave={handleLeave}
+                <div
+                  onMouseEnter={handleEnter}
+                  onMouseLeave={handleLeave}
                   className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white text-xl">
                   {currentUser.username[0].toUpperCase()}
                 </div>
               </button>
               {isVisible && (
-                <ListGroup onMouseOver={handleEnter} onMouseLeave={handleLeave} className="w-24 absolute top-10 right-0 z-30">
+                <ListGroup
+                  onMouseOver={handleEnter}
+                  onMouseLeave={handleLeave}
+                  className="w-24 absolute top-10 right-0 z-30">
                   <ListGroup.Item>
                     <NavLink to="/profile">Profile</NavLink>
                   </ListGroup.Item>
                   <ListGroup.Item onClick={logout}>
-                    <NavLink onClick={handleLeave} to="/login">Logout</NavLink>
+                    <NavLink onClick={handleLeave} to="/login">
+                      Logout
+                    </NavLink>
                   </ListGroup.Item>
                 </ListGroup>
               )}
@@ -70,7 +74,10 @@ export default function Nav() {
                   isActive ? 'text-cyan-500' : null
                 }
                 to="/signup">
-                <Button gradientDuoTone="cyanToBlue" className='bg-gradient-to-r from-cyan-500 to-blue-500' size="xs">
+                <Button
+                  gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
+                  size="xs">
                   Sign Up
                 </Button>
               </NavLink>
@@ -79,5 +86,5 @@ export default function Nav() {
         </div>
       </Navbar.Collapse>
     </Navbar>
-  )
+  );
 }

@@ -8,14 +8,14 @@ const Login = () => {
   const { login } = useContext(UserContext);
   const [formErrors, setFormErrors] = useState({});
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const username = formData.get("username");
+    const email = formData.get("email");
     const password = formData.get("password");
 
     let errors = {};
-    if (!username) errors.username = "Username is required.";
+    if (!email) errors.email = "Email is required.";
     if (!password) errors.password = "Password is required.";
 
     if (Object.keys(errors).length > 0) {
@@ -27,11 +27,18 @@ const Login = () => {
       return;
     }
 
-    login(username, password);
-    Swal.fire({
-      icon: "success",
-      text: "Logged in successfully!",
-    });
+    try {
+      await login(email, password);
+      Swal.fire({
+        icon: "success",
+        text: "Logged in successfully!",
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        text: error.message,
+      });
+    }
   }
 
   return (
@@ -43,19 +50,19 @@ const Login = () => {
 
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="username" value="Username" />
+          <Label htmlFor="email" value="Email" />
         </div>
         <TextInput
-          id="username"
-          name="username"
-          type="text"
-          placeholder="Username"
+          id="email"
+          name="email"
+          type="email"
+          placeholder="Email"
           required
           className="px-4 text-black"
-          color={formErrors.username ? "failure" : "default"}
+          color={formErrors.email ? "failure" : "default"}
         />
-        {formErrors.username && (
-          <p className="text-red-600 text-sm mt-1">{formErrors.username}</p>
+        {formErrors.email && (
+          <p className="text-red-600 text-sm mt-1">{formErrors.email}</p>
         )}
       </div>
 

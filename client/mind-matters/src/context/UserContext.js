@@ -1,23 +1,24 @@
-import { createContext, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Swal from 'sweetalert2'
+import { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
-export const UserContext = createContext()
+export const UserContext = createContext();
 
 export default function UserProvider({ children }) {
-  const [onchange, setOnchange] = useState(false)
+  const [onchange, setOnchange] = useState(false);
   const [authToken, setAuthToken] = useState(() =>
     sessionStorage.getItem('authToken')
       ? sessionStorage.getItem('authToken')
       : null
-  )
-  const [currentUser, setCurrentUser] = useState(null)
+  );
+  const [currentUser, setCurrentUser] = useState(null);
 
-  const navigate = useNavigate()
-  const apiEndpoint = 'http://127.0.0.1:5555'
-  // add user
+  const navigate = useNavigate();
+  const apiEndpoint = 'http://127.0.0.1:5555';
+
+  // Add user
   function addUser(username, email, password) {
-    fetch(`${apiEndpoint}/users`, {
+    fetch(`${apiEndpoint}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,56 +33,67 @@ export default function UserProvider({ children }) {
             title: 'Your account has been created, login.',
             showConfirmButton: false,
             timer: 1500,
-          })
-          navigate('/login')
+          });
+          navigate('/login');
         } else if (res.status === 400) {
           Swal.fire({
             icon: 'error',
             text: 'Username or email already exists!',
-          })
+          });
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }
 
-  // login user
-  function login(username, password) {
+  // Login user
+  function login(email, password) {
     fetch(`${apiEndpoint}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Invalid email or password');
+        }
+        return res.json();
+      })
       .then((response) => {
-        if (response.access_token) {
-          sessionStorage.setItem('authToken', response.access_token)
-          setAuthToken(response.access_token)
+        if (response.token) {
+          sessionStorage.setItem('authToken', response.token);
+          setAuthToken(response.token);
           Swal.fire({
             position: 'center',
             icon: 'success',
             title: 'Login successful.',
             showConfirmButton: false,
             timer: 1500,
-          })
-          navigate('/')
-          setOnchange(!onchange)
+          });
+          navigate('/');
+          setOnchange(!onchange);
         } else {
           Swal.fire({
             icon: 'error',
-            text: response.error,
-          })
+            text: 'Login failed. Please try again.',
+          });
         }
       })
+      .catch((error) => {
+        Swal.fire({
+          icon: 'error',
+          text: error.message,
+        });
+      });
   }
 
   // Logout user
   function logout() {
-    sessionStorage.removeItem('authToken')
-    setCurrentUser(null)
-    setAuthToken(null)
-    setOnchange(!onchange)
+    sessionStorage.removeItem('authToken');
+    setCurrentUser(null);
+    setAuthToken(null);
+    setOnchange(!onchange);
   }
 
   // Get Authenticated user
@@ -97,15 +109,19 @@ export default function UserProvider({ children }) {
         .then((res) => res.json())
         .then((response) => {
           if (response.email || response.username) {
-            setCurrentUser(response)
+            setCurrentUser(response);
           } else {
-            setCurrentUser(null)
+            setCurrentUser(null);
           }
         })
+        .catch((error) => {
+          console.error('Error fetching authenticated user:', error);
+          setCurrentUser(null);
+        });
     }
-  }, [authToken, onchange])
-  
-  // context data
+  }, [authToken, onchange]);
+
+  // Context data
   const contextData = {
     addUser,
     login,
@@ -113,11 +129,13 @@ export default function UserProvider({ children }) {
     currentUser,
     authToken,
     onchange,
-    setOnchange, 
-    apiEndpoint
-  }
+    setOnchange,
+    apiEndpoint,
+  };
 
   return (
-    <UserContext.Provider value={contextData}>{children}</UserContext.Provider>
-  )
+    <UserContext.Provider value={contextData}>
+      {children}
+    </UserContext.Provider>
+  );
 }
