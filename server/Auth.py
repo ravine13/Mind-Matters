@@ -66,7 +66,6 @@ api.add_resource(UserRegister, '/register')
 
 
 class UserLogin(Resource):
-    # @jwt_required()
     def get(self):
         return current_user.to_dict()
 
