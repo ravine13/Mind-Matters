@@ -71,7 +71,7 @@ export default function UserProvider({ children }) {
             showConfirmButton: false,
             timer: 1500,
           });
-          navigate('/');
+          navigate('/user-dashboard');
           setOnchange(!onchange);
         } else {
           Swal.fire({
