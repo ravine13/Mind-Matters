@@ -16,14 +16,13 @@ export default function UserProvider({ children }) {
   const navigate = useNavigate();
   const apiEndpoint = 'http://127.0.0.1:5555';
 
-  // Add user
-  function addUser(username, email, password) {
+  function addUser(username, email, password, confirmPassword) {
     fetch(`${apiEndpoint}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, email, password }),
+      body: JSON.stringify({ username, email, password, confirm_password: confirmPassword }), // Make sure keys match
     })
       .then((res) => {
         if (res.ok) {
@@ -35,15 +34,21 @@ export default function UserProvider({ children }) {
             timer: 1500,
           });
           navigate('/login');
-        } else if (res.status === 400) {
+        } else if (res.status === 409) { // 409 for conflict
           Swal.fire({
             icon: 'error',
             text: 'Username or email already exists!',
+          });
+        } else if (res.status === 422) { // 422 for unprocessable entity
+          Swal.fire({
+            icon: 'error',
+            text: 'Passwords do not match!',
           });
         }
       })
       .catch((err) => console.log(err));
   }
+  
 
   function login(email, password) {
     fetch(`${apiEndpoint}/login`, {
