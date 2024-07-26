@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, jsonify, abort
+from flask import Blueprint, jsonify, abort,make_response
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
     JWTManager,
@@ -60,7 +60,8 @@ api.add_resource(UserRegister, '/register')
 class UserLogin(Resource):
     def get(self):
         user_dict = current_user.to_dict()
-        return jsonify(user=user_dict)
+        response = make_response(jsonify(user=user_dict),201)
+        return response
 
     def post(self):
         data = login_args.parse_args()
@@ -71,7 +72,7 @@ class UserLogin(Resource):
 
         token = create_access_token(identity=user.id)
         user_dict = user.to_dict()
-        response = jsonify(token=token, user=user_dict)
+        response = make_response(jsonify(token=token, user=user_dict),201)
         return response
 
 api.add_resource(UserLogin, '/login')
