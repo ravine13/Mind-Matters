@@ -14,13 +14,13 @@ const Signup = () => {
     const username = formData.get("username");
     const email = formData.get("email");
     const password = formData.get("password");
-    const password2 = formData.get("password2");
+    const confirmPassword = formData.get("confirm_password");
 
     let errors = {};
     if (!username) errors.username = "Username is required.";
     if (!email) errors.email = "Email is required.";
     if (!password) errors.password = "Password is required.";
-    if (password !== password2) errors.password2 = "Passwords do not match.";
+    if (password !== confirmPassword) errors.confirm_password = "Passwords do not match.";
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -31,7 +31,7 @@ const Signup = () => {
       return;
     }
 
-    addUser(username, email, password);
+    addUser(username, email, password, confirmPassword);
     Swal.fire({
       icon: "success",
       text: "Account created successfully!",
@@ -101,19 +101,19 @@ const Signup = () => {
 
       <div>
         <div className="mb-2 block">
-          <Label htmlFor="password2" value="Confirm password" />
+          <Label htmlFor="confirm_password" value="Confirm password" />
         </div>
         <TextInput
-          id="password2"
-          name="password2"
+          id="confirm_password"
+          name="confirm_password"
           type="password"
           placeholder="Confirm Password"
           required
           className="px-4 text-black"
-          color={formErrors.password2 ? "failure" : "default"}
+          color={formErrors.confirm_password ? "failure" : "default"}
         />
-        {formErrors.password2 && (
-          <p className="text-red-600 text-sm mt-1">{formErrors.password2}</p>
+        {formErrors.confirm_password && (
+          <p className="text-red-600 text-sm mt-1">{formErrors.confirm_password}</p>
         )}
       </div>
 
