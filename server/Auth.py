@@ -11,6 +11,7 @@ from flask_jwt_extended import (
 from flask_restful import Resource, Api, reqparse
 
 from models import User, db, TokenBlocklist
+from routes.users import user_schema
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
@@ -60,7 +61,8 @@ api.add_resource(UserRegister, '/register')
 class UserLogin(Resource):
     def get(self):
         user_dict = current_user.to_dict()
-        response = make_response(jsonify(user=user_dict),201)
+        response = jsonify(user=user_dict)
+        response.status_code = 201
         return response
 
     def post(self):
@@ -71,9 +73,11 @@ class UserLogin(Resource):
             return jsonify(detail="Invalid email or password"), 401
 
         token = create_access_token(identity=user.id)
-        user_dict = user.to_dict()
-        response = make_response(jsonify(token=token, user=user_dict),201)
+        user_dict = user_schema.dump(user)
+        response = make_response(jsonify(token=token, user=user_dict), 201)
         return response
+
+
 
 api.add_resource(UserLogin, '/login')
 
