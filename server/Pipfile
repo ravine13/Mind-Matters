@@ -26,6 +26,8 @@ api-jwt = "*"
 marshmallow = "*"
 requests = "*"
 decorators = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
 
 [dev-packages]
 
