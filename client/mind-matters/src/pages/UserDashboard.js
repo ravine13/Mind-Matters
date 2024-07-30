@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Button } from 'flowbite-react';
 import Calendar from 'react-calendar';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from './Sidebar'; // Adjust the path if necessary
-import Navbar from './Navbar'; // Adjust the path if necessary
+import Sidebar from './Sidebar'; 
+import Navbar from './Navbar'; 
 
 const UserDashboard = () => {
   const navigate = useNavigate();
