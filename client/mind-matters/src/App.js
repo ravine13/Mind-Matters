@@ -7,14 +7,11 @@ import Layout from "./layouts/Layout";
 import UserProvider from './context/UserContext';
 import UserDashboard from './pages/UserDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
-import Nav from './components/Navbar';
-import Foot from './components/Footer';
 import './index.css'; 
 
 export default function App() {
   return (
       <UserProvider>
-        <Nav />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -24,7 +21,6 @@ export default function App() {
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
           </Route>
         </Routes>
-        <Foot />
       </UserProvider>
   );
 }
