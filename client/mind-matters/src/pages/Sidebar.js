@@ -43,7 +43,7 @@ const Sidebar = () => {
         <li>
           <NavLink to="/doctors" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
             <i className='bx bxs-group'></i>
-            <span className="ml-2">Doctor</span>
+            <span className="ml-2">Book Appointment</span>
           </NavLink>
         </li>
       </ul>

@@ -36,9 +36,6 @@ const UserDashboard = () => {
             <Button gradientDuoTone="purpleToBlue" onClick={bookAppointment}>
               Book Appointment
             </Button>
-            <Button gradientDuoTone="cyanToBlue" onClick={handleLogout} className="mt-4">
-              Logout
-            </Button>
             <Calendar className="mt-8" />
           </div>
         </main>
