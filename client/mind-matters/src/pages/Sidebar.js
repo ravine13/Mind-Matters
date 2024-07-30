@@ -31,7 +31,7 @@ const Sidebar = () => {
         <li>
           <NavLink to="/requests" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
             <i className='bx bxs-doughnut-chart'></i>
-            <span className="ml-2">Requests</span>
+            <span className="ml-2">Profile</span>
           </NavLink>
         </li>
         <li>
