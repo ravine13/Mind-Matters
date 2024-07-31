@@ -1,6 +1,6 @@
 # Mind Matters
 
-Mind Matters is a comprehensive web application designed to facilitate the operations of psychologists and their clients. This application provides functionalities for user authentication and authorization, appointment scheduling, blog post management, and handling contact form submissions.
+Mind Matters is a comprehensive web application designed to facilitate the operations of psychologist and their clients. This application provides functionalities for user authentication and authorization, appointment scheduling and handling contact form submissions.
 
 # Features
 User Management: Supports user registration and login, with user roles for psychologists and clients.
