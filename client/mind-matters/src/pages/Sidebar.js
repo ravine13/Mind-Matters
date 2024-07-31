@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Profile from './Profile';
 import Settings from './Settings';
-import AppointmentForm from './AppointmentForm';
+import AppointmentForm from '../components/AppointmentForm';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState(null);

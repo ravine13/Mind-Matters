@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Button } from 'flowbite-react';
-import Calendar from 'react-calendar';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar'; 
 import Navbar from './Navbar'; 
@@ -36,7 +35,6 @@ const UserDashboard = () => {
             <Button gradientDuoTone="purpleToBlue" onClick={bookAppointment}>
               Book Appointment
             </Button>
-            <Calendar className="mt-8" />
           </div>
         </main>
       </div>
