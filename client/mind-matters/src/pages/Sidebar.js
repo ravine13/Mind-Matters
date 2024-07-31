@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Profile from './Profile';
+import Settings from './Settings';
+import AppointmentForm from './AppointmentForm';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState(null);
@@ -12,6 +14,14 @@ const Sidebar = () => {
 
   const handleProfileClick = () => {
     setActiveComponent('profile');
+  };
+
+  const handleSettingClick = () => {
+    setActiveComponent('settings');
+  };
+
+  const handleAppointmentClick = () => {
+    setActiveComponent('appointment');
   };
 
   return (
@@ -47,18 +57,18 @@ const Sidebar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/doctors" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
+            <button onClick={handleAppointmentClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-group"></i>
               <span className="ml-2">Book Appointment</span>
-            </NavLink>
+            </button>
           </li>
         </ul>
         <ul className="mt-auto">
           <li>
-            <NavLink to="/settings" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
-              <i className="bx bxs-cog"></i>
+            <button onClick={handleSettingClick} className="flex items-center p-4 w-full text-left">
+              <i className="bx bxs-cog"></i> 
               <span className="ml-2">Settings</span>
-            </NavLink>
+            </button>
           </li>
           <li>
             <button onClick={logout} className="flex items-center p-4 w-full text-left">
@@ -71,6 +81,8 @@ const Sidebar = () => {
 
       <main className="flex-grow p-6">
         {activeComponent === 'profile' && <Profile />}
+        {activeComponent === 'settings' && <Settings />} 
+        {activeComponent === 'appointment' && <AppointmentForm />}
       </main>
     </div>
   );
