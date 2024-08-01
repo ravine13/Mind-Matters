@@ -1,20 +1,26 @@
-import React, { useContext, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { UserContext } from '../context/UserContext'
-import Swal from 'sweetalert2'
-import { Button } from 'flowbite-react'
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+import Swal from 'sweetalert2';
+import { Button } from 'flowbite-react';
 
 const Profile = () => {
-  const { currentUser, onchange, authToken, logout, apiEndpoint } = useContext(UserContext)
+  const { currentUser, onchange, authToken, logout, apiEndpoint } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/');
+    } else {
+      setIsLoading(false); // Set loading to false when currentUser is available
+    }
+  }, [onchange, currentUser, navigate]);
 
-    useEffect(()=>{
-          if (!currentUser) {
-            navigate('/')
-          }
+  if (isLoading) {
+    return <div>Loading...</div>; // Show a loading indicator while checking currentUser
+  }
 
-    },[onchange, currentUser, navigate])
   function deleteProfile() {
     fetch(`http://127.0.0.1:5555/users`, {
       method: 'DELETE',
@@ -24,25 +30,25 @@ const Profile = () => {
       },
     })
       .then((data) => {
-        console.log('Success:', data)
+        console.log('Success:', data);
         Swal.fire({
           title: 'Deleted!',
           text: 'Your profile has been deleted.',
           icon: 'success',
         }).then(() => {
-            navigate('/')
-          logout()
-        })
+          navigate('/');
+          logout();
+        });
       })
       .catch((error) => {
-        console.error('Error:', error)
-        Swal('Error!', 'There was a problem deleting the profile.', 'error')
-      })
+        console.error('Error:', error);
+        Swal.fire('Error!', 'There was a problem deleting the profile.', 'error');
+      });
   }
 
-  function handleSubmit(e){
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
+  function handleSubmit(e) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     console.log([...formData.entries()]);
   }
 
@@ -70,15 +76,14 @@ const Profile = () => {
                       confirmButtonText: 'Yes, delete it!',
                     }).then((result) => {
                       if (result.isConfirmed) {
-                        deleteProfile()
+                        deleteProfile();
                       }
-                    })
+                    });
                   }}>
                   Delete
                 </button>
               </div>
             </div>
-
             <hr />
           </div>
           <form onSubmit={handleSubmit} className="file-upload w-full max-w-7xl">
@@ -129,9 +134,7 @@ const Profile = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                         placeholder=""
                         aria-label="Phone number"
-                        defaultValue={
-                          currentUser ? currentUser.contact_info : ''
-                        }
+                        defaultValue={currentUser ? currentUser.contact_info : ''}
                         name="contact_info"
                         disabled
                       />
@@ -167,9 +170,7 @@ const Profile = () => {
               <div className="mx-auto px-5">
                 <div className="p-4 bg-gray-200 rounded">
                   <div className="flex flex-col gap-3">
-                    <h4 className="mb-4 mt-0 text-lg font-semibold">
-                      Profile photo
-                    </h4>
+                    <h4 className="mb-4 mt-0 text-lg font-semibold">Profile photo</h4>
                     <div className="text-center">
                       <div className="h-64 w-64 mx-auto border border-gray-300 bg-white rounded">
                         {currentUser && currentUser.profile_img ? (
@@ -195,7 +196,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -100,24 +100,7 @@ const AppointmentForm = () => {
                         required
                     />
                 </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2" htmlFor="service">
-                        Service
-                    </label>
-                    <select
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="service"
-                        name="service"
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="" disabled selected>Select a service</option>
-                        <option value="haircut">Haircut</option>
-                        <option value="coloring">Coloring</option>
-                        <option value="styling">Styling</option>
-                        <option value="facial">Facial</option>
-                    </select>
-                </div>
+        
                 <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2" htmlFor="notes">
                         Message

@@ -7,6 +7,7 @@ from flask_jwt_extended import (
     jwt_required,
     current_user,
     get_jwt,
+     get_jwt_identity 
 )
 from flask_restful import Resource, Api, reqparse
 
@@ -57,6 +58,26 @@ class UserRegister(Resource):
         return jsonify(detail=f'User {data["email"]} has been created successfully')
 
 api.add_resource(UserRegister, '/register')
+
+class AuthenticatedUser(Resource):
+    @jwt_required()
+    def get(self):
+        current_user_id = get_jwt_identity()  
+        user = User.query.get(current_user_id)
+
+        if user:
+            user_data = {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email
+            }
+            response = make_response(jsonify(user_data), 200)
+            return response
+        else:
+            res = make_response(jsonify({"error": "User not found"}), 404)
+            return res
+
+api.add_resource(AuthenticatedUser, '/authenticated_user')
 
 class UserLogin(Resource):
     def get(self):
