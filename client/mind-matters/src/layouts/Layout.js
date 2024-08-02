@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Nav from '../components/Navbar';
-import Foot from '../components/Footer';
+
 
 const Layout = () => {
   return (
@@ -12,11 +12,7 @@ const Layout = () => {
       </div>
       {/* Outlet */}
       <Outlet />
-      {/* Footer */}
-      <div className="w-full py-4 mb-auto bg-white px-2 border-t border-t-zinc-300 absolute -bottom-0">
-        <Foot />
       </div>
-    </div>
   );
 };
 
