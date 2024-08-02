@@ -41,7 +41,7 @@ const Sidebar = () => {
           <li>
             <NavLink to="/peer-mentors" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
               <i className="bx bxs-shopping-bag-alt"></i>
-              <span className="ml-2">Peer Mentors</span>
+              <span className="ml-2">Resources</span>
             </NavLink>
           </li>
           <li>
@@ -50,12 +50,12 @@ const Sidebar = () => {
               <span className="ml-2">Profile</span>
             </button>
           </li>
-          <li>
+          {/* <li>
             <NavLink to="/messages" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
               <i className="bx bxs-message-dots"></i>
               <span className="ml-2">Message</span>
             </NavLink>
-          </li>
+          </li> */}
           <li>
             <button onClick={handleAppointmentClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-group"></i>

@@ -8,16 +8,11 @@ const UserDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Replace with logic to check if the user is authenticated
     const authToken = sessionStorage.getItem('authToken');
     if (!authToken) {
       navigate('/login');
     }
   }, [navigate]);
-
-  const bookAppointment = () => {
-    // Logic to book appointment
-  };
 
   const handleLogout = () => {
     sessionStorage.removeItem('authToken');
