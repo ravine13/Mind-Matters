@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Button } from 'flowbite-react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import Foot from '../components/Footer';
 
 const Home = () => {
   const { currentUser } = useContext(UserContext);
@@ -28,6 +29,7 @@ const Home = () => {
           </Link>
         </div>
       </div>
+      <Foot />
     </main>
   );
 }

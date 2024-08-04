@@ -7,10 +7,6 @@ User Management: Supports user registration and login, with user roles for psych
 
 Appointment Scheduling: Allows clients to schedule appointments with psychologists, including the ability to add notes for each appointment.
 
-Blog Post Management: Psychologists can create and manage blog posts, sharing valuable insights and information with their clients and the public.
-
-Contact Form Submissions: Stores and manages submissions from the website's contact form, allowing for efficient communication with potential clients or interested parties.
-
 
 # Technologies Used
 
