@@ -41,6 +41,7 @@ class UserRegister(Resource):
         data = register_args.parse_args()
         email = data.get('email')
         user_exists = User.query.filter_by(email=email).first()
+        
 
         if user_exists:
             return jsonify(details='Conflict! Account Already Exists'), 409
@@ -64,6 +65,7 @@ class AuthenticatedUser(Resource):
     def get(self):
         current_user_id = get_jwt_identity()  
         user = User.query.get(current_user_id)
+
 
         if user:
             user_data = {
