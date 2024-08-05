@@ -7,7 +7,6 @@ import Layout from "./layouts/Layout";
 import UserProvider from './context/UserContext';
 import UserDashboard from './pages/UserDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
-import Foot from '../components/Footer';
 import './index.css'; 
 
 
@@ -23,7 +22,6 @@ export default function App() {
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
           </Route>
         </Routes>
-        <Foot />
       </UserProvider>
   );
 }

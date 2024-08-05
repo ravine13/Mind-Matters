@@ -1,11 +1,13 @@
 import { useContext } from 'react';
 import { Button } from 'flowbite-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import Foot from '../components/Footer';
 
+
 const Home = () => {
   const { currentUser } = useContext(UserContext);
+  const location = useLocation();
 
   return (
     <main className="px-4 my-12">
@@ -29,7 +31,7 @@ const Home = () => {
           </Link>
         </div>
       </div>
-      <Foot />
+      {location.pathname === '/' && <Foot />}
     </main>
   );
 }
