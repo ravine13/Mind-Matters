@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, jsonify,make_response
+from flask import Blueprint, jsonify, abort,make_response
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
     JWTManager,
@@ -14,7 +14,7 @@ from flask_restful import Resource, Api, reqparse
 from models import User, db, TokenBlocklist
 from routes.users import user_schema
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', _name_)
 bcrypt = Bcrypt()
 jwt = JWTManager()
 api = Api(auth_bp)
@@ -36,20 +36,25 @@ def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return User.query.get(identity)
 
-
 class UserRegister(Resource):
     def post(self):
         data = register_args.parse_args()
         email = data.get('email')
-        user_exists = User.query.filter_by(email=email).first()
-        
 
+        # Validate email domain
+        if email.endswith('@doctor.com'):
+            return jsonify(details='Email addresses with @doctor.com are not allowed'), 400
+
+        # Check if user already exists
+        user_exists = User.query.filter_by(email=email).first()
         if user_exists:
             return jsonify(details='Conflict! Account Already Exists'), 409
 
+        # Check if passwords match
         if data['password'] != data['confirm_password']:
-            return jsonify(detail='Passwords do not match'), 422
+            return jsonify(details='Passwords do not match'), 422
 
+        # Create new user
         new_user = User(
             username=data['username'],
             email=data['email'],
@@ -57,10 +62,11 @@ class UserRegister(Resource):
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify(detail=f'User {data["email"]} has been created successfully')
+
+        res = make_response(jsonify(details=f'User {data["email"]} has been created successfully'), 201)
+        return res
 
 api.add_resource(UserRegister, '/register')
-
 
 class AuthenticatedUser(Resource):
     @jwt_required()

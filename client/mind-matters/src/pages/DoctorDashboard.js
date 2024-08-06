@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
+import Sidebar from '../DoctorDashBoard/SideBar';
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const DoctorDashboard = () => {
 
   return (
     <main className="px-4 my-12">
+      <SideBar />
       <h1 className="text-3xl font-semibold text-center">Doctor Dashboard</h1>
       <div className="flex flex-col items-center my-8">
         <Button gradientDuoTone="purpleToBlue" onClick={viewAppointments}>

@@ -5,133 +5,125 @@ import Swal from 'sweetalert2';
 export const UserContext = createContext();
 
 export default function UserProvider({ children }) {
+  const [authToken, setAuthToken] = useState(() => sessionStorage.getItem('authToken') || null);
   const [onchange, setOnchange] = useState(false);
-  const [authToken, setAuthToken] = useState(() =>
-    sessionStorage.getItem('authToken')
-      ? sessionStorage.getItem('authToken')
-      : null
-  );
-  const [currentUser, setCurrentUser] = useState(null);
-
   const navigate = useNavigate();
   const apiEndpoint = 'http://127.0.0.1:5555';
 
-  function addUser(username, email, password, confirmPassword) {
-    fetch(`${apiEndpoint}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, email, password, confirm_password: confirmPassword }), // Make sure keys match
-    })
-      .then((res) => {
-        if (res.ok) {
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Your account has been created, login.',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate('/login');
-        } else if (res.status === 409) { // 409 for conflict
-          Swal.fire({
-            icon: 'error',
-            text: 'Username or email already exists!',
-          });
-        } else if (res.status === 422) { // 422 for unprocessable entity
-          Swal.fire({
-            icon: 'error',
-            text: 'Passwords do not match!',
-          });
-        }
-      })
-      .catch((err) => console.log(err));
-  }
-  
+  async function addUser(username, email, password, confirmPassword) {
+    try {
+      const res = await fetch(`${apiEndpoint}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, confirm_password: confirmPassword }),
+      });
 
-  function login(email, password) {
-    fetch(`${apiEndpoint}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('Invalid email or password');
-        }
-        return res.json();
-      })
-      .then((response) => {
-        if (response.token) {
-          sessionStorage.setItem('authToken', response.token);
-          setAuthToken(response.token);
-          Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Login successful.',
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          navigate('/user-dashboard');
-          setOnchange(!onchange);
-        } else {
-          Swal.fire({
-            icon: 'error',
-            text: 'Login failed. Please try again.',
-          });
-        }
-      })
-      .catch((error) => {
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Your account has been created. Please log in.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate('/login');
+      } else if (res.status === 409) {
         Swal.fire({
           icon: 'error',
-          text: error.message,
+          text: data.details || 'Username or email already exists!',
         });
+      } else if (res.status === 422) {
+        Swal.fire({
+          icon: 'error',
+          text: data.details || 'Passwords do not match!',
+        });
+      } else if (res.status === 400) {
+        Swal.fire({
+          icon: 'error',
+          text: data.details || 'Invalid input data!',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          text: data.details || 'An unexpected error occurred. Please try again later.',
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        icon: 'error',
+        text: 'Network error. Please check your connection and try again.',
       });
+    }
   }
-  
 
-  // Logout user
+  async function login(email, password) {
+    try {
+      const res = await fetch(`${apiEndpoint}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) {
+        throw new Error('Invalid email or password');
+      }
+      const response = await res.json();
+      if (response.token) {
+        sessionStorage.setItem('authToken', response.token);
+        setAuthToken(response.token);
+
+        // Fetch the user details after login
+        const userRes = await fetch(`${apiEndpoint}/authenticated_user`, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${response.token}`,
+          },
+        });
+        const user = await userRes.json();
+
+        if (user.email.includes("@doctor.com")) {
+          navigate('/doctor-dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
+
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Login successful.',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        setOnchange(!onchange);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          text: 'Login failed. Please try again.',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        text: error.message,
+      });
+    }
+  }
+
   function logout() {
     sessionStorage.removeItem('authToken');
-    setCurrentUser(null);
     setAuthToken(null);
     setOnchange(!onchange);
   }
-
-  // Get Authenticated user
-  useEffect(() => {
-    if (authToken) {
-      fetch(`${apiEndpoint}/authenticated_user`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((response) => {
-          if (response.email || response.username) {
-            setCurrentUser(response);
-          } else {
-            setCurrentUser(null);
-          }
-        })
-        .catch((error) => {
-          console.error('Error fetching authenticated user:', error);
-          setCurrentUser(null);
-        });
-    }
-  }, [authToken, onchange]);
 
   // Context data
   const contextData = {
     addUser,
     login,
     logout,
-    currentUser,
     authToken,
     onchange,
     setOnchange,
