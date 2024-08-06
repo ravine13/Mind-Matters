@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import Profile from './Profile';
-import Settings from './Settings';
+import Profile from '../pages/Profile';
+import Settings from '../pages/Settings';
 import AppointmentForm from '../components/AppointmentForm';
 
 const Sidebar = () => {
