@@ -33,29 +33,11 @@ const Sidebar = () => {
         </a>
         <ul className="mt-4">
           <li>
-            <NavLink to="/dashboard" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
-              <i className="bx bxs-dashboard"></i>
-              <span className="ml-2">Dashboard</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/peer-mentors" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
-              <i className="bx bxs-shopping-bag-alt"></i>
-              <span className="ml-2">Resources</span>
-            </NavLink>
-          </li>
-          <li>
             <button onClick={handleProfileClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-doughnut-chart"></i>
               <span className="ml-2">Profile</span>
             </button>
           </li>
-          {/* <li>
-            <NavLink to="/messages" className={({ isActive }) => `flex items-center p-4 ${isActive ? 'bg-gray-700' : ''}`}>
-              <i className="bx bxs-message-dots"></i>
-              <span className="ml-2">Message</span>
-            </NavLink>
-          </li> */}
           <li>
             <button onClick={handleAppointmentClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-group"></i>
