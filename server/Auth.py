@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, jsonify, abort,make_response
+from flask import Blueprint, jsonify, abort, make_response
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
     JWTManager,
@@ -7,14 +7,14 @@ from flask_jwt_extended import (
     jwt_required,
     current_user,
     get_jwt,
-     get_jwt_identity 
+    get_jwt_identity 
 )
 from flask_restful import Resource, Api, reqparse
 
 from models import User, db, TokenBlocklist
 from routes.users import user_schema
 
-auth_bp = Blueprint('auth', _name_)
+auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
 jwt = JWTManager()
 api = Api(auth_bp)
@@ -43,16 +43,16 @@ class UserRegister(Resource):
 
         # Validate email domain
         if email.endswith('@doctor.com'):
-            return jsonify(details='Email addresses with @doctor.com are not allowed'), 400
+            return make_response(jsonify(details='Email addresses with @doctor.com are not allowed'), 400)
 
         # Check if user already exists
         user_exists = User.query.filter_by(email=email).first()
         if user_exists:
-            return jsonify(details='Conflict! Account Already Exists'), 409
+            return make_response(jsonify(details='Conflict! Account Already Exists'), 409)
 
         # Check if passwords match
         if data['password'] != data['confirm_password']:
-            return jsonify(details='Passwords do not match'), 422
+            return make_response(jsonify(details='Passwords do not match'), 422)
 
         # Create new user
         new_user = User(
@@ -63,8 +63,7 @@ class UserRegister(Resource):
         db.session.add(new_user)
         db.session.commit()
 
-        res = make_response(jsonify(details=f'User {data["email"]} has been created successfully'), 201)
-        return res
+        return make_response(jsonify(details=f'User {data["email"]} has been created successfully'), 201)
 
 api.add_resource(UserRegister, '/register')
 
@@ -74,41 +73,31 @@ class AuthenticatedUser(Resource):
         current_user_id = get_jwt_identity()  
         user = User.query.get(current_user_id)
 
-
         if user:
             user_data = {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email
             }
-            response = make_response(jsonify(user_data), 200)
-            return response
+            return make_response(jsonify(user_data), 200)
         else:
-            res = make_response(jsonify({"error": "User not found"}), 404)
-            return res
+            return make_response(jsonify({"error": "User not found"}), 404)
 
 api.add_resource(AuthenticatedUser, '/authenticated_user')
 
 class UserLogin(Resource):
-    def get(self):
-        user_dict = current_user.to_dict()
-        response = jsonify(user=user_dict)
-        response.status_code = 201
-        return response
-
     def post(self):
         data = login_args.parse_args()
         user = User.query.filter_by(email=data["email"]).first()
         
         if not user or not bcrypt.check_password_hash(user.password_hash, data["password"]):
-            return jsonify(detail="Invalid email or password"), 401
+            res =  make_response(jsonify(detail="Invalid email or password"), 401)
+            return res
 
         token = create_access_token(identity=user.id)
         user_dict = user_schema.dump(user)
-        response = make_response(jsonify(token=token, user=user_dict), 201)
-        return response
-
-
+        res = make_response(jsonify(token=token, user=user_dict), 201)
+        return res
 
 api.add_resource(UserLogin, '/login')
 
@@ -120,6 +109,7 @@ class Logout(Resource):
         blocked_token = TokenBlocklist(jti=jti, created_at=datetime.utcnow())
         db.session.add(blocked_token)
         db.session.commit()
-        return jsonify(detail="logged out successfully")
-
+        res = make_response(jsonify(detail="Logged out successfully"), 200)
+        return res 
+    
 api.add_resource(Logout, '/logout')

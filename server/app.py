@@ -22,8 +22,11 @@ load_dotenv()
 
 def create_app():
     app = Flask(__name__)    
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') 
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+    # app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') 
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'app.db')
+    app.config['SECRET_KEY'] = b"\x06F\x14\x91\xba\xdc\x9a\x96g'\xc7\xb0"
+
     
     db.init_app(app)
     jwt.init_app(app)
