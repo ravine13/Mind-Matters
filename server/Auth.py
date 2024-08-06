@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Blueprint, jsonify, abort,make_response
+from flask import Blueprint, jsonify,make_response
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (
     JWTManager,
@@ -36,6 +36,7 @@ def user_lookup_callback(_jwt_header, jwt_data):
     identity = jwt_data["sub"]
     return User.query.get(identity)
 
+
 class UserRegister(Resource):
     def post(self):
         data = register_args.parse_args()
@@ -59,6 +60,7 @@ class UserRegister(Resource):
         return jsonify(detail=f'User {data["email"]} has been created successfully')
 
 api.add_resource(UserRegister, '/register')
+
 
 class AuthenticatedUser(Resource):
     @jwt_required()

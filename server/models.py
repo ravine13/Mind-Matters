@@ -12,7 +12,8 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     is_psychologist = db.Column(db.Boolean, default=False)
-    role = db.Column(db.String(20), nullable=False, default='user') 
+  
+    
 
     def set_password(self, password):
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -23,8 +24,7 @@ class User(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'email': self.email,
-            'role': self.role
+            'email': self.email
 
         }
 
