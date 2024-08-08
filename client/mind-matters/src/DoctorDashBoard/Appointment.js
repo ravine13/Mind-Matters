@@ -24,7 +24,7 @@ const Appointments = () => {
             <p><strong>Client ID:</strong> {appointment.client_id}</p>
             <p><strong>Date:</strong> {appointment.appointment_date}</p>
             <p><strong>Time:</strong> {appointment.appointment_time}</p>
-            {appointment.notes && <p><strong>Notes:</strong> {appointment.notes}</p>}
+            {appointment.notes && <p><strong>Notes:</strong> {appointment.notes}</p> }  
           </li>
         ))}
       </ul>
@@ -33,3 +33,5 @@ const Appointments = () => {
 };
 
 export default Appointments;
+
+// appointments
