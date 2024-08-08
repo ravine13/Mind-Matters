@@ -31,6 +31,18 @@ const Sidebar = () => {
     setActiveComponent('appointments');
   };
 
+  const handleProfileClick = () => {
+    setActiveComponent('profile');
+  };
+
+  const handlePatientsClick = () => {
+    setActiveComponent('patients');
+  };
+
+  const handleMessagesClick = () => {
+    setActiveComponent('messages');
+  };
+
   return (
     <div className="flex">
       <aside className="w-64 bg-gray-800 text-white min-h-screen">
@@ -43,6 +55,24 @@ const Sidebar = () => {
             <button onClick={handleAppointmentsClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-calendar"></i>
               <span className="ml-2">Appointments</span>
+            </button>
+          </li>
+          <li>
+            <button onClick={handleProfileClick} className="flex items-center p-4 w-full text-left">
+              <i className="bx bxs-user"></i>
+              <span className="ml-2">Profile</span>
+            </button>
+          </li>
+          <li>
+            <button onClick={handlePatientsClick} className="flex items-center p-4 w-full text-left">
+              <i className="bx bxs-group"></i>
+              <span className="ml-2">Patients</span>
+            </button>
+          </li>
+          <li>
+            <button onClick={handleMessagesClick} className="flex items-center p-4 w-full text-left">
+              <i className="bx bxs-message"></i>
+              <span className="ml-2">Messages</span>
             </button>
           </li>
         </ul>
@@ -72,6 +102,10 @@ const Sidebar = () => {
             </ul>
           </div>
         )}
+        {/* Placeholder for other components */}
+        {activeComponent === 'profile' && <div>Profile Component</div>}
+        {activeComponent === 'patients' && <div>Patients Component</div>}
+        {activeComponent === 'messages' && <div>Messages Component</div>}
       </main>
     </div>
   );
