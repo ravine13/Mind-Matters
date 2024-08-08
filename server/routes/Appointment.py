@@ -32,7 +32,7 @@ class Appointments(Resource):
         result = appointments_schema.dump(appointments)
         return make_response(jsonify(result), 200)
     
-    @jwt_required()
+    # @jwt_required()
     def post(self):
         data = appointment_parser.parse_args()
         new_appointment = Appointment(**data)
@@ -49,7 +49,7 @@ class AppointmentByID(Resource):
             return make_response(jsonify({'error': 'Appointment not found'}), 404)
         return make_response(jsonify(appointment_schema.dump(appointment)), 200)
 
-    @jwt_required()
+    # @jwt_required()
     def patch(self, id):
         appointment = Appointment.query.get(id)
         if not appointment:
@@ -64,7 +64,7 @@ class AppointmentByID(Resource):
         return make_response(jsonify(appointment_schema.dump(appointment)), 200)
 
 
-    @jwt_required()
+    # @jwt_required()
     def delete(self, id):
         appointment = Appointment.query.get(id)
         if not appointment:
