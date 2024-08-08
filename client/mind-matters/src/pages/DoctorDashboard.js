@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from '../DoctorDashBoard/SideBar';
+import SideBar from '../DoctorDashBoard/SideBar'
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
