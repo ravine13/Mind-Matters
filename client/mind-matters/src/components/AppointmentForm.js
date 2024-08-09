@@ -15,22 +15,39 @@ const AppointmentForm = () => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`${apiEndpoint}/appointments`, formData);
+            const token = sessionStorage.getItem('authToken');
+            const clientId = sessionStorage.getItem('userId'); // Retrieve the client ID
+    
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+    
+            // Format time to HH:MM:SS
+            const [hours, minutes] = formData.appointment_time.split(':');
+            const formattedTime = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
+    
+            const formDataWithClientId = {
+                ...formData,
+                appointment_time: formattedTime, 
+                client_id: clientId, 
+            };
+    
+            await axios.post(`${apiEndpoint}/appointments`, formDataWithClientId, config);
             setFormData({
                 appointment_date: '',
                 appointment_time: '',
-                client_id: '',
                 notes: '',
             });
         } catch (error) {
             console.error('Error booking appointment:', error);
         }
     };
-
+    
+    
+    
     return (
         <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">

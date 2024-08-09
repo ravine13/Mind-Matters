@@ -83,7 +83,8 @@ export default function UserProvider({ children }) {
           },
         });
         const user = await userRes.json();
-
+        
+        sessionStorage.setItem('userId', user.id);
         if (user.email.includes("@doctor.com")) {
           navigate('/doctor-dashboard');
         } else {
