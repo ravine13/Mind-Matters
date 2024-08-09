@@ -24,7 +24,7 @@ const UserDashboard = () => {
       <div className="flex-1 flex flex-col">
         <Navbar />
         <main className="px-4 py-12 flex-1">
-          <h1 className="text-3xl font-semibold text-center">User Dashboard</h1>
+          <h1 className="text-3xl font-semibold text-center"> client Dashboard</h1>
           <div className="flex flex-col items-center my-8">
           </div>
         </main>
