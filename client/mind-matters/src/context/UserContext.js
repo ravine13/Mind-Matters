@@ -74,7 +74,6 @@ export default function UserProvider({ children }) {
         sessionStorage.setItem('authToken', response.token);
         setAuthToken(response.token);
 
-        // Fetch the user details after login
         const userRes = await fetch(`${apiEndpoint}/authenticated_user`, {
           method: 'GET',
           headers: {

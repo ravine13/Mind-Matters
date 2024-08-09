@@ -6,19 +6,19 @@ import { Button } from 'flowbite-react';
 
 const Profile = () => {
   const { currentUser, onchange, authToken, logout, apiEndpoint } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const [isLoading, setIsLoading] = useState(true); 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) {
       navigate('/');
     } else {
-      setIsLoading(false); // Set loading to false when currentUser is available
+      setIsLoading(false); 
     }
   }, [onchange, currentUser, navigate]);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Show a loading indicator while checking currentUser
+    return <div>Loading...</div>;
   }
 
   function deleteProfile() {
