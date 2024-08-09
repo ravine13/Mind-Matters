@@ -11,10 +11,14 @@ const AppointmentForm = () => {
         notes: '',
     });
 
+    const [successMessage, setSuccessMessage] = useState(''); // State for success message
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         setFormData({ ...formData, [id]: value });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -41,58 +45,30 @@ const AppointmentForm = () => {
                 appointment_time: '',
                 notes: '',
             });
+            setSuccessMessage('Appointment booked successfully!'); // Set success message
+            setErrorMessage(''); // Clear any previous error messages
         } catch (error) {
-            console.error('Error booking appointment:', error);
+            setSuccessMessage(''); // Clear any previous success messages
+            setErrorMessage('Error booking appointment. Please try again.'); // Set error message
         }
     };
-    
-    
     
     return (
         <div className="max-w-md mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="text-2xl py-4 px-6 bg-gray-900 text-white text-center font-bold uppercase">
                 Book an Appointment
             </div>
+            {successMessage && (
+                <div className="bg-green-200 text-green-800 p-4 mb-4 rounded">
+                    {successMessage}
+                </div>
+            )}
+            {errorMessage && (
+                <div className="bg-red-200 text-red-800 p-4 mb-4 rounded">
+                    {errorMessage}
+                </div>
+            )}
             <form className="py-4 px-6" onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
-                        Name
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name"
-                        type="text"
-                        placeholder="Enter your name"
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2" htmlFor="email">
-                        Email
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-bold mb-2" htmlFor="phone">
-                        Phone Number
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="phone"
-                        type="tel"
-                        placeholder="Enter your phone number"
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2" htmlFor="appointment_date">
                         Date
@@ -102,6 +78,7 @@ const AppointmentForm = () => {
                         id="appointment_date"
                         type="date"
                         onChange={handleInputChange}
+                        value={formData.appointment_date}
                         required
                     />
                 </div>
@@ -114,10 +91,10 @@ const AppointmentForm = () => {
                         id="appointment_time"
                         type="time"
                         onChange={handleInputChange}
+                        value={formData.appointment_time}
                         required
                     />
                 </div>
-        
                 <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2" htmlFor="notes">
                         Message
@@ -128,6 +105,7 @@ const AppointmentForm = () => {
                         rows="4"
                         placeholder="Enter any additional information"
                         onChange={handleInputChange}
+                        value={formData.notes}
                     ></textarea>
                 </div>
                 <div className="flex items-center justify-center mb-4">
