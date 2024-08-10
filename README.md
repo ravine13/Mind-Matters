@@ -5,7 +5,7 @@ Mind Matters is a comprehensive web application designed to facilitate the opera
 # Features
 User Management: Supports user registration and login, with user roles for psychologists and clients.
 
-Appointment Scheduling: Allows clients to schedule appointments with psychologists, including the ability to add notes for each appointment.
+Appointment Scheduling: Allows clients to schedule appointments with psychologist, including the ability to add notes for each appointment.
 
 
 # Technologies Used
