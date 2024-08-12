@@ -61,7 +61,8 @@ const Profile = () => {
               <h3 className="text-lg font-semibold">My Profile</h3>
               <div className="flex gap-4">
                 <Link to={'/update_profile'}>
-                  <Button gradientDuoTone="cyanToBlue">Update Profile</Button>
+                  <Button gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500">Update Profile</Button>
                 </Link>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

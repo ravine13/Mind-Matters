@@ -1,10 +1,26 @@
 import React from 'react';
 import { Card } from 'flowbite-react';
-import image1 from '../assest/images/friends.jpg'; 
-import image2 from '../assest/images/image2.jpg';   
-import image3 from '../assest/images/image3.jpg';   
+import image1 from '../assest/images/friends.jpg';  // Corrected path
+import image2 from '../assest/images/image2.jpg';   // Corrected path
+import image3 from '../assest/images/image3.jpg';   // Corrected path
+
 
 const About = () => {
+  const missionValues = [
+    {
+      title: "Our Mission",
+      content: "To provide a platform that supports mental well-being by offering resources, counseling, and a supportive community.",
+    },
+    {
+      title: "Our Values",
+      content: "Empathy, Integrity, and Confidentiality guide everything we do at Mind Matters.",
+    },
+    {
+      title: "Our Vision",
+      content: "To be the leading online resource for mental health, fostering a world where mental well-being is accessible to all.",
+    },
+  ];
+
   const quotes = [
     {
       img: image1, // Local image
@@ -26,9 +42,21 @@ const About = () => {
   return (
     <div className="bg-gray-100 p-10">
       <h1 className="text-4xl font-bold text-center mb-10">About Us</h1>
+      
+      {/* Mission, Values, and Vision Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+        {missionValues.map((item, index) => (
+          <Card key={index} className="p-6 text-center transform hover:scale-105 transition-transform duration-300">
+            <h2 className="text-2xl font-bold mb-4">{item.title}</h2>
+            <p className="text-gray-600">{item.content}</p>
+          </Card>
+        ))}
+      </div>
+
+      {/* Quotes Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {quotes.map((quote, index) => (
-          <Card key={index} className="p-6 text-center">
+          <Card key={index} className="p-6 text-center transform hover:scale-105 transition-transform duration-300">
             <img
               src={quote.img}
               alt={`Quote ${index + 1}`}
