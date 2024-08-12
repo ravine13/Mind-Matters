@@ -10,6 +10,8 @@ export default function UserProvider({ children }) {
   const navigate = useNavigate();
   const apiEndpoint = 'http://127.0.0.1:5555';
 
+  const [currentUser, setCurrentUser] = useState(null)
+
   async function addUser(username, email, password, confirmPassword) {
     try {
       const res = await fetch(`${apiEndpoint}/register`, {
@@ -115,15 +117,35 @@ export default function UserProvider({ children }) {
 
   function logout() {
     sessionStorage.removeItem('authToken');
+    setCurrentUser(null)
     setAuthToken(null);
     setOnchange(!onchange);
   }
-
+  useEffect(() => {
+    if (authToken) {
+      fetch(`${apiEndpoint}/authenticated_user`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((response) => {
+          if (response.email || response.username) {
+            setCurrentUser(response)
+          } else {
+            setCurrentUser(null)
+          }
+        })
+    }
+  }, [authToken, onchange])
   // Context data
   const contextData = {
     addUser,
     login,
     logout,
+    currentUser,
     authToken,
     onchange,
     setOnchange,

@@ -1,20 +1,23 @@
-import React from "react";
-import { Card } from "flowbite-react";
+import React from 'react';
+import { Card } from 'flowbite-react';
+import image1 from '../assest/images/friends.jpg';  // Corrected path
+import image2 from '../assest/images/image2.jpg';   // Corrected path
+import image3 from '../assest/images/image3.jpg';   // Corrected path
 
 const About = () => {
   const quotes = [
     {
-      img: 'https://source.unsplash.com/random/400x300', // Replace with your image URL
+      img: image1, // Local image
       quote: "The greatest weapon against stress is our ability to choose one thought over another.",
       author: "William James",
     },
     {
-      img: 'https://source.unsplash.com/random/400x301', // Replace with your image URL
+      img: image2, // Local image
       quote: "Mental health is not a destination, but a process. It's about how you drive, not where you're going.",
       author: "Noam Shpancer",
     },
     {
-      img: 'https://source.unsplash.com/random/400x302', // Replace with your image URL
+      img: image3, // Local image
       quote: "You are not your illness. You have an individual story to tell. Staying yourself is part of the battle.",
       author: "Julian Seifter",
     },
