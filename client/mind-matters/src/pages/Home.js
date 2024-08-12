@@ -3,6 +3,7 @@ import { Button } from 'flowbite-react';
 import { Link, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import Foot from '../components/Footer';
+import About from './About';
 
 
 const Home = () => {
@@ -20,15 +21,7 @@ const Home = () => {
         <p className="w-full my-10 text-2xl font-semibold max-w-2xl">
           At Mind Matters, we believe in the power of mental health. Our platform offers a supportive community and resources to help you navigate your mental health journey. Connect with professionals, access valuable tools, and take control of your mental well-being.
         </p>
-        <div className="flex flex-col md:flex-row gap-4">
-          <Link to={currentUser ? '/book_appointment' : '/login'}>
-            <Button gradientDuoTone="purpleToBlue">
-              Book an Appointment
-            </Button>
-          </Link>
-          <Link to='/resources'>
-            <Button gradientDuoTone="cyanToBlue">Explore Resources</Button>
-          </Link>
+        <div className="flex flex-col md:flex-row gap-4">          
         </div>
       </div>
       {location.pathname === '/' && <Foot />}

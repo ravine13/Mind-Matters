@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
+
 export default function Nav() {
   const { currentUser, logout } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(false);
@@ -79,6 +80,18 @@ export default function Nav() {
                   className="bg-gradient-to-r from-cyan-500 to-blue-500"
                   size="xs">
                   Sign Up
+                </Button>
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'text-cyan-500' : null
+                }
+                to="/About">
+                <Button
+                  gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
+                  size="xs">
+                  About us
                 </Button>
               </NavLink>
             </>
