@@ -25,11 +25,6 @@ const Settings = () => {
           <h4 className="text-md font-semibold">Privacy</h4>
           <p>Review and modify your privacy settings.</p>
         </div>
-        <div className="bg-gray-200 p-4 rounded">
-          <Button onClick={handleLogout} gradientDuoTone="cyanToBlue">
-            Logout
-          </Button>
-        </div>
       </div>
     </div>
   );

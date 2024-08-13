@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Profile from '../pages/Profile';
+import Settings from '../pages/Settings';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState(null);
@@ -40,6 +41,10 @@ const Sidebar = () => {
     setActiveComponent('patients');
   };
 
+  const handleSettingClick = () => {
+    setActiveComponent('settings');
+  };
+
   const handleMessagesClick = () => {
     setActiveComponent('messages');
   };
@@ -71,9 +76,9 @@ const Sidebar = () => {
             </button>
           </li>
           <li>
-            <button onClick={handleMessagesClick} className="flex items-center p-4 w-full text-left">
-              <i className="bx bxs-message"></i>
-              <span className="ml-2">Messages</span>
+            <button onClick={handleSettingClick} className="flex items-center p-4 w-full text-left">
+              <i className="bx bxs-cog"></i> 
+              <span className="ml-2">Settings</span>
             </button>
           </li>
         </ul>
@@ -105,7 +110,7 @@ const Sidebar = () => {
         )}
         {/* Placeholder for other components */}
         {activeComponent === 'profile' && <Profile />}
-        {activeComponent === 'patients' && <div>Patients Component</div>}
+        {activeComponent === 'settings' && <Settings />} 
         {activeComponent === 'messages' && <div>Messages Component</div>}
       </main>
     </div>
