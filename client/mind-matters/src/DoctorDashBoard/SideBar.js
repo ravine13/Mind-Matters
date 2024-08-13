@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Profile from '../pages/Profile';
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState(null);
@@ -103,7 +104,7 @@ const Sidebar = () => {
           </div>
         )}
         {/* Placeholder for other components */}
-        {activeComponent === 'profile' && <div>Profile Component</div>}
+        {activeComponent === 'profile' && <Profile />}
         {activeComponent === 'patients' && <div>Patients Component</div>}
         {activeComponent === 'messages' && <div>Messages Component</div>}
       </main>
