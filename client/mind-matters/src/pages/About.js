@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card } from 'flowbite-react';
-import image1 from '../assest/images/friends.jpg';  // Corrected path
-import image2 from '../assest/images/image2.jpg';   // Corrected path
-import image3 from '../assest/images/image3.jpg';   // Corrected path
+import image1 from '../assest/images/friends.jpg';  
+import image2 from '../assest/images/image2.jpg';   
+import image3 from '../assest/images/image3.jpg';   
 
 
 const About = () => {
