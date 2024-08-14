@@ -69,12 +69,12 @@ const Sidebar = () => {
               <span className="ml-2">Profile</span>
             </button>
           </li>
-          <li>
+          {/* <li>
             <button onClick={handlePatientsClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-group"></i>
               <span className="ml-2">Patients</span>
             </button>
-          </li>
+          </li> */}
           <li>
             <button onClick={handleSettingClick} className="flex items-center p-4 w-full text-left">
               <i className="bx bxs-cog"></i> 
