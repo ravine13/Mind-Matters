@@ -5,7 +5,6 @@ const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    // Fetch the appointments from the backend
     axios.get('http://127.0.0.1:5555/appointments')
       .then(response => {
         setAppointments(response.data);
@@ -34,4 +33,3 @@ const Appointments = () => {
 
 export default Appointments;
 
-// appointments

@@ -11,7 +11,6 @@ const DoctorDashboard = () => {
   };
 
   const logout = () => {
-    // Logic to logout
     navigate('/login');
   };
 

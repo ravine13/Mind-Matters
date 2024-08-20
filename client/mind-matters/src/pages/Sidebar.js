@@ -52,12 +52,6 @@ const Sidebar = () => {
               <span className="ml-2">Settings</span>
             </button>
           </li>
-          <li>
-            <button onClick={logout} className="flex items-center p-4 w-full text-left">
-              <i className="bx bxs-log-out-circle"></i>
-              <span className="ml-2">Logout</span>
-            </button>
-          </li>
         </ul>
       </aside>
 
