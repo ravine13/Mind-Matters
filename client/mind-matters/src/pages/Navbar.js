@@ -4,7 +4,7 @@ const Navbar = () => {
   return (
     <nav className="bg-gray-800 text-white p-4 flex items-center justify-between">
       <i className='bx bx-menu text-2xl'></i>
-      <a href="#" className="text-lg">Categories</a>
+
       <form id="searchForm" action="#" className="flex flex-1 max-w-lg mx-4">
         <div className="relative flex-1">
           <input
