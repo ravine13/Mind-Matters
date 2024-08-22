@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const apiEndpoint = 'http://127.0.0.1:5555';
 
 const Bookings = () => {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState('');
+    const navigate = useNavigate(); // Initialize useNavigate
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -27,6 +29,14 @@ const Bookings = () => {
 
     return (
         <div className="max-w-lg mx-auto mt-10">
+            <div className="mb-4">
+                <button
+                    onClick={() => navigate('/user-dashboard')} // 
+                    className="bg-gray-900 text-white py-2 px-4 rounded hover:bg-gray-800 focus:outline-none focus:shadow-outline"
+                >
+                    Back to Dashboard
+                </button>
+            </div>
             <h2 className="text-2xl font-bold mb-6 text-center">Your Appointments</h2>
             {error && (
                 <div className="bg-red-200 text-red-800 p-4 mb-4 rounded">
