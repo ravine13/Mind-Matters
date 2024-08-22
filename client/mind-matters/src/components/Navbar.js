@@ -25,7 +25,12 @@ export default function Nav() {
           <NavLink
             className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
             to="/">
-            Home
+               <Button
+                  gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
+                  size="xs">
+                  Home
+                </Button> 
           </NavLink>
           {currentUser && (
             <NavLink
@@ -67,7 +72,13 @@ export default function Nav() {
                   isActive ? 'text-cyan-500' : null
                 }
                 to="/login">
-                Login
+                  <Button
+                  gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
+                  size="xs">
+                    Login
+                  </Button>
+               
               </NavLink>
               <NavLink
                 className={({ isActive }) =>
