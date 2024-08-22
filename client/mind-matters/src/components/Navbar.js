@@ -36,7 +36,12 @@ export default function Nav() {
             <NavLink
               className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
               to="/bookings">
-              Bookings
+                 <Button
+                  gradientDuoTone="cyanToBlue"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
+                  size="xs">
+                  Bookings
+                </Button>
             </NavLink>
           )}
           {currentUser ? (
