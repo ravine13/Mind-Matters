@@ -23,13 +23,13 @@ const AppointmentForm = () => {
         e.preventDefault();
         try {
             const token = sessionStorage.getItem('authToken');
-            const clientId = sessionStorage.getItem('userId'); // Retrieve the client ID
+            const clientId = sessionStorage.getItem('userId'); 
     
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
     
-            // Format time to HH:MM:SS
+           
             const [hours, minutes] = formData.appointment_time.split(':');
             const formattedTime = `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
     
@@ -45,11 +45,11 @@ const AppointmentForm = () => {
                 appointment_time: '',
                 notes: '',
             });
-            setSuccessMessage('Appointment booked successfully!'); // Set success message
-            setErrorMessage(''); // Clear any previous error messages
+            setSuccessMessage('Appointment booked successfully!'); 
+            setErrorMessage(''); 
         } catch (error) {
-            setSuccessMessage(''); // Clear any previous success messages
-            setErrorMessage('Error booking appointment. Please try again.'); // Set error message
+            setSuccessMessage(''); 
+            setErrorMessage('Error booking appointment. Please try again.'); 
         }
     };
     

@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
-
 export default function Nav() {
   const { currentUser, logout } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(false);

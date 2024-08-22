@@ -7,6 +7,7 @@ import Layout from "./layouts/Layout";
 import UserProvider from './context/UserContext';
 import UserDashboard from './pages/UserDashboard';
 import DoctorDashboard from './pages/DoctorDashboard';
+import Bookings from './context/Booking';
 import './index.css'; 
 
 
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="signup" element={<Signup />} />
             <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+            <Route path="/bookings" element={<Bookings />} />
           </Route>
         </Routes>
       </UserProvider>
