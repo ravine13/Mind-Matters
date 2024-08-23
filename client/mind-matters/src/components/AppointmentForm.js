@@ -11,8 +11,8 @@ const AppointmentForm = () => {
         notes: '',
     });
 
-    const [successMessage, setSuccessMessage] = useState(''); // State for success message
-    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); 
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
