@@ -7,6 +7,36 @@ User Management: Supports user registration and login, with user roles for psych
 
 Appointment Scheduling: Allows clients to schedule appointments with psychologist, including the ability to add notes for each appointment.
 
+## How to Run the Application (Before Deployment)
+
+Backend Setup
+Install Dependencies: Ensure you have pipenv installed. Navigate to the backend directory and run the following commands to activate the virtual environment and install the dependencies:
+
+pipenv shell
+pipenv install
+Set Environment Variables: Configure the necessary environment variables:
+
+export PYTHONPATH=$PYTHONPATH:/path/to/main.py
+export FLASK_APP=app.py
+export FLASK_RUN_PORT=5555
+Replace /path/to/main.py with the actual path to your main Python file.
+
+Run the Flask Application: Start the backend server in debug mode:
+
+
+flask run --debug
+Frontend Setup
+Navigate to the Frontend Directory: Move into the client directory and then into the mind-matters directory:
+
+
+cd client
+cd mind-matters
+Install Dependencies and Start the Application: Run the following command to install dependencies and start the frontend server:
+
+
+npm install
+npm start
+This will start the application on your local machine, allowing you to test all features before deployment.
 
 # Technologies Used
 
