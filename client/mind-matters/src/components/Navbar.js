@@ -19,31 +19,14 @@ export default function Nav() {
       <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
         Mind Matters
       </span>
-      <Navbar.Toggle />
-      <Navbar.Collapse>
+      <Navbar.Toggle className='md:hidden' />
+      <Navbar.Collapse className="md:flex md:items-center md:justify-end">
         <div className="flex px-4 md:px-0 flex-col md:flex-row gap-4 items-end md:items-center">
-          <NavLink
+        <NavLink
             className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
             to="/">
-               <Button
-                  gradientDuoTone="cyanToBlue"
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
-                  size="xs">
-                  Home
-                </Button> 
+            Home
           </NavLink>
-          {currentUser && (
-            <NavLink
-              className={({ isActive }) => (isActive ? 'text-cyan-500' : null)}
-              to="/bookings">
-                 <Button
-                  gradientDuoTone="cyanToBlue"
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500"
-                  size="xs">
-                  Bookings
-                </Button>
-            </NavLink>
-          )}
           {currentUser ? (
             <div className="relative">
               <button onClick={handleEnter}>

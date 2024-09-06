@@ -120,6 +120,7 @@ export default function UserProvider({ children }) {
     setCurrentUser(null)
     setAuthToken(null);
     setOnchange(!onchange);
+    navigate('/login');
   }
   useEffect(() => {
     if (authToken) {
