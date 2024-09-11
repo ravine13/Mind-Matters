@@ -8,7 +8,8 @@ export default function UserProvider({ children }) {
   const [authToken, setAuthToken] = useState(() => sessionStorage.getItem('authToken') || null);
   const [onchange, setOnchange] = useState(false);
   const navigate = useNavigate();
-  const apiEndpoint = 'http://127.0.0.1:5555';
+  // const apiEndpoint = 'http://127.0.0.1:5555';
+  const apiEndpoint = 'https://mind-matters-mn7b.onrender.com'
 
   const [currentUser, setCurrentUser] = useState(null)
 

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 
-const apiEndpoint = 'http://127.0.0.1:5555';
+// const apiEndpoint = 'http://127.0.0.1:5555';
+const apiEndpoint = 'https://mind-matters-mn7b.onrender.com'
 
 const Bookings = () => {
     const [appointments, setAppointments] = useState([]);
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchAppointments = async () => {

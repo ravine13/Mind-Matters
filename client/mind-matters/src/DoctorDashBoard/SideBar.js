@@ -11,7 +11,7 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5555/appointments');
+        const response = await fetch('https://mind-matters-mn7b.onrender.com/appointments');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -108,7 +108,6 @@ const Sidebar = () => {
             </ul>
           </div>
         )}
-        {/* Placeholder for other components */}
         {activeComponent === 'profile' && <Profile />}
         {activeComponent === 'settings' && <Settings />} 
         {activeComponent === 'messages' && <div>Messages Component</div>}

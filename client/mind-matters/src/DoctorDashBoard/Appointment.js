@@ -5,7 +5,7 @@ const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5555/appointments')
+    axios.get('https://mind-matters-mn7b.onrender.com/appointments')
       .then(response => {
         setAppointments(response.data);
       })
