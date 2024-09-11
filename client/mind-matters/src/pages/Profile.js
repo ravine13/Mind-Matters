@@ -22,7 +22,7 @@ const Profile = () => {
   }
 
   function deleteProfile() {
-    fetch(`http://127.0.0.1:5555/users`, {
+    fetch(`https://mind-matters-mn7b.onrender.com/users`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

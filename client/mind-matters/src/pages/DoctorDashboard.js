@@ -7,7 +7,6 @@ const DoctorDashboard = () => {
   const navigate = useNavigate();
 
   const viewAppointments = () => {
-    // Logic to view appointments
   };
 
   const logout = () => {
@@ -21,7 +20,6 @@ const DoctorDashboard = () => {
         <Button gradientDuoTone="purpleToBlue" onClick={viewAppointments}>
           View Appointments
         </Button>
-        {/* Add logic to display user notes for each appointment */}
       </div>
     </main>
   );
