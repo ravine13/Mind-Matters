@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const apiEndpoint = 'http://127.0.0.1:5555';
+// const apiEndpoint = 'http://127.0.0.1:5555';
+const apiEndpoint = 'https://mind-matters-mn7b.onrender.com'
 
 const AppointmentForm = () => {
     const [formData, setFormData] = useState({
