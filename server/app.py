@@ -45,5 +45,9 @@ def create_app():
 
 app = create_app()
 
+@app.route("/")
+def home():
+    return "Welcome to my app"
+
 if __name__ == "__main__":
     app.run(debug=True, port=5555)
