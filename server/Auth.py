@@ -96,6 +96,12 @@ class UserLogin(Resource):
 
         token = create_access_token(identity=user.id)
         user_dict = user_schema.dump(user)
+
+        if "doctor" in user.email:
+            user_dict["role"] = "admin"
+        else:
+            user_dict["role"] = "user"
+
         res = make_response(jsonify(token=token, user=user_dict), 201)
         return res
 
