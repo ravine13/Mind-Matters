@@ -34,38 +34,49 @@ def serialize_appointment(appt):
         } if appt.client else None
     }
 
-# -------- Resources --------
+from models import User, Appointment, db
+from flask_jwt_extended import get_jwt_identity, jwt_required
+from serializer import appointments_schema
+from flask import jsonify, make_response
+
 class Appointments(Resource):
     @jwt_required()
     def get(self):
         user_id = get_jwt_identity()
-        appointments = Appointment.query.filter_by(client_id=user_id).order_by(
-            Appointment.appointment_date.asc(),
-            Appointment.appointment_time.asc()
-        ).all()
-        return make_response(jsonify([serialize_appointment(a) for a in appointments]), 200)
+        user = User.query.get(user_id)
+
+        if not user:
+            return make_response(jsonify({"error": "User not found"}), 404)
+
+        # ✅ Psychologists/admins see all appointments
+        if user.is_psychologist:
+            appointments = Appointment.query.all()
+        else:
+            appointments = Appointment.query.filter_by(client_id=user_id).all()
+
+
+        result = [serialize_appointment(a) for a in appointments]
+        return make_response(jsonify(result), 200)
 
     @jwt_required()
     def post(self):
         data = appointment_parser.parse_args()
         user_id = get_jwt_identity()
 
-        try:
-            appt_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
-            appt_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
-        except ValueError:
-            return make_response(jsonify({"error": "Invalid date/time format"}), 400)
+        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
+        appointment_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
 
-        new_appt = Appointment(
-            appointment_date=appt_date,
-            appointment_time=appt_time,
+        new_appointment = Appointment(
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
             client_id=user_id,
-            notes=data.get('notes')
+            notes=data['notes']
         )
 
-        db.session.add(new_appt)
+        db.session.add(new_appointment)
         db.session.commit()
-        return make_response(jsonify(serialize_appointment(new_appt)), 201)
+
+        return make_response(jsonify(serialize_appointment(new_appointment)), 201)
 
 api.add_resource(Appointments, '/appointments')
 
