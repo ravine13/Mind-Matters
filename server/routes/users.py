@@ -29,6 +29,7 @@ user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 class Users(Resource):
+    @jwt_required()
     def get(self):
         users = User.query.all()
         result = users_schema.dump(users)

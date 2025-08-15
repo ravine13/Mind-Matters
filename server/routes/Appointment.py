@@ -3,7 +3,7 @@ from flask_restful import Api, Resource, reqparse
 from flask_marshmallow import Marshmallow
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from models import Appointment, db
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity  # ✅ Added get_jwt_identity
 from serializer import AppointmentSchema, appointment_schema, appointments_schema
 from datetime import datetime
 
@@ -12,15 +12,28 @@ api = Api(appointment_bp)
 
 # Appointment parser for creating a new appointment
 appointment_parser = reqparse.RequestParser()
-appointment_parser.add_argument('appointment_date', type=str, required=True, help='Appointment date is required (YYYY-MM-DD)')
-appointment_parser.add_argument('appointment_time', type=str, required=True, help='Appointment time is required (HH:MM:SS)')
-appointment_parser.add_argument('client_id', type=int, required=True, help='Client ID is required')
+appointment_parser.add_argument(
+    'appointment_date', type=str, required=True,
+    help='Appointment date is required (YYYY-MM-DD)'
+)
+appointment_parser.add_argument(
+    'appointment_time', type=str, required=True,
+    help='Appointment time is required (HH:MM:SS)'
+)
+# ❌ Removed client_id from parser (we will get it from JWT instead)
 appointment_parser.add_argument('notes', type=str, help='Notes are optional')
 
 # Appointment parser for updating an existing appointment
 appointment_patch_parser = reqparse.RequestParser()
-appointment_patch_parser.add_argument('appointment_date', type=str, required=False, help='Appointment date is optional (YYYY-MM-DD)')
-appointment_patch_parser.add_argument('appointment_time', type=str, required=False, help='Appointment time is optional (HH:MM:SS)')
+appointment_patch_parser.add_argument(
+    'appointment_date', type=str, required=False,
+    help='Appointment date is optional (YYYY-MM-DD)'
+)
+appointment_patch_parser.add_argument(
+    'appointment_time', type=str, required=False,
+    help='Appointment time is optional (HH:MM:SS)'
+)
+# ❌ Keeping client_id optional here in case admins want to change it manually
 appointment_patch_parser.add_argument('client_id', type=int, required=False, help='Client ID is optional')
 appointment_patch_parser.add_argument('notes', type=str, required=False, help='Notes are optional')
 
@@ -29,15 +42,18 @@ appointment_schema = AppointmentSchema()
 appointments_schema = AppointmentSchema(many=True)
 
 class Appointments(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         appointments = Appointment.query.all()
         result = appointments_schema.dump(appointments)
         return make_response(jsonify(result), 200)
-    
-    # @jwt_required()
+
+    @jwt_required()
     def post(self):
         data = appointment_parser.parse_args()
+
+        # ✅ Get user ID from the JWT token instead of request body
+        user_id = get_jwt_identity()
 
         # Convert date and time strings to datetime objects
         appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
@@ -46,7 +62,7 @@ class Appointments(Resource):
         new_appointment = Appointment(
             appointment_date=appointment_date,
             appointment_time=appointment_time,
-            client_id=data['client_id'],
+            client_id=user_id,  # ✅ Using token identity
             notes=data['notes']
         )
 
@@ -58,19 +74,19 @@ class Appointments(Resource):
 api.add_resource(Appointments, '/appointments')
 
 class AppointmentByID(Resource):
-    # @jwt_required()
+    @jwt_required()
     def get(self, id):
         appointment = Appointment.query.get(id)
         if not appointment:
             return make_response(jsonify({'error': 'Appointment not found'}), 404)
         return make_response(jsonify(appointment_schema.dump(appointment)), 200)
 
-    # @jwt_required()
+    @jwt_required()
     def patch(self, id):
         appointment = Appointment.query.get(id)
         if not appointment:
             return make_response(jsonify({'message': 'Appointment not found'}), 404)
-        
+
         data = appointment_patch_parser.parse_args()
 
         if data['appointment_date']:
