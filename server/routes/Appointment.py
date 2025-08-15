@@ -1,119 +1,117 @@
-from flask import Flask, Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response
 from flask_restful import Api, Resource, reqparse
-from flask_marshmallow import Marshmallow
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
-from models import Appointment, db
-from flask_jwt_extended import jwt_required, get_jwt_identity  # ✅ Added get_jwt_identity
-from serializer import AppointmentSchema, appointment_schema, appointments_schema
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
+from models import Appointment, db
 
 appointment_bp = Blueprint('appointment_bp', __name__)
 api = Api(appointment_bp)
 
-# Appointment parser for creating a new appointment
+# -------- Parsers --------
 appointment_parser = reqparse.RequestParser()
-appointment_parser.add_argument(
-    'appointment_date', type=str, required=True,
-    help='Appointment date is required (YYYY-MM-DD)'
-)
-appointment_parser.add_argument(
-    'appointment_time', type=str, required=True,
-    help='Appointment time is required (HH:MM:SS)'
-)
-# ❌ Removed client_id from parser (we will get it from JWT instead)
-appointment_parser.add_argument('notes', type=str, help='Notes are optional')
+appointment_parser.add_argument('appointment_date', type=str, required=True, help='YYYY-MM-DD')
+appointment_parser.add_argument('appointment_time', type=str, required=True, help='HH:MM:SS')
+appointment_parser.add_argument('notes', type=str)
 
-# Appointment parser for updating an existing appointment
 appointment_patch_parser = reqparse.RequestParser()
-appointment_patch_parser.add_argument(
-    'appointment_date', type=str, required=False,
-    help='Appointment date is optional (YYYY-MM-DD)'
-)
-appointment_patch_parser.add_argument(
-    'appointment_time', type=str, required=False,
-    help='Appointment time is optional (HH:MM:SS)'
-)
-# ❌ Keeping client_id optional here in case admins want to change it manually
-appointment_patch_parser.add_argument('client_id', type=int, required=False, help='Client ID is optional')
-appointment_patch_parser.add_argument('notes', type=str, required=False, help='Notes are optional')
+appointment_patch_parser.add_argument('appointment_date', type=str)
+appointment_patch_parser.add_argument('appointment_time', type=str)
+appointment_patch_parser.add_argument('notes', type=str)
 
-# Schemas for serializing the appointments
-appointment_schema = AppointmentSchema()
-appointments_schema = AppointmentSchema(many=True)
+# -------- Helpers --------
+def serialize_appointment(appt):
+    """Return appointment dict with nested client info."""
+    return {
+        "id": appt.id,
+        "appointment_date": appt.appointment_date.isoformat(),
+        "appointment_time": appt.appointment_time.strftime("%H:%M:%S"),
+        "notes": appt.notes,
+        "client_id": appt.client_id,
+        "client": {
+            "id": appt.client.id,
+            "username": appt.client.username,
+            "email": appt.client.email
+        } if appt.client else None
+    }
 
+# -------- Resources --------
 class Appointments(Resource):
     @jwt_required()
     def get(self):
-        appointments = Appointment.query.all()
-        result = appointments_schema.dump(appointments)
-        return make_response(jsonify(result), 200)
+        user_id = get_jwt_identity()
+        appointments = Appointment.query.filter_by(client_id=user_id).order_by(
+            Appointment.appointment_date.asc(),
+            Appointment.appointment_time.asc()
+        ).all()
+        return make_response(jsonify([serialize_appointment(a) for a in appointments]), 200)
 
     @jwt_required()
     def post(self):
         data = appointment_parser.parse_args()
-
-        # ✅ Get user ID from the JWT token instead of request body
         user_id = get_jwt_identity()
 
-        # Convert date and time strings to datetime objects
-        appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
-        appointment_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
+        try:
+            appt_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
+            appt_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
+        except ValueError:
+            return make_response(jsonify({"error": "Invalid date/time format"}), 400)
 
-        new_appointment = Appointment(
-            appointment_date=appointment_date,
-            appointment_time=appointment_time,
-            client_id=user_id,  # ✅ Using token identity
-            notes=data['notes']
+        new_appt = Appointment(
+            appointment_date=appt_date,
+            appointment_time=appt_time,
+            client_id=user_id,
+            notes=data.get('notes')
         )
 
-        db.session.add(new_appointment)
+        db.session.add(new_appt)
         db.session.commit()
-
-        return make_response(jsonify(appointment_schema.dump(new_appointment)), 201)
+        return make_response(jsonify(serialize_appointment(new_appt)), 201)
 
 api.add_resource(Appointments, '/appointments')
+
 
 class AppointmentByID(Resource):
     @jwt_required()
     def get(self, id):
-        appointment = Appointment.query.get(id)
-        if not appointment:
-            return make_response(jsonify({'error': 'Appointment not found'}), 404)
-        return make_response(jsonify(appointment_schema.dump(appointment)), 200)
+        user_id = get_jwt_identity()
+        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        if not appt:
+            return make_response(jsonify({'error': 'Not found'}), 404)
+        return make_response(jsonify(serialize_appointment(appt)), 200)
 
     @jwt_required()
     def patch(self, id):
-        appointment = Appointment.query.get(id)
-        if not appointment:
-            return make_response(jsonify({'message': 'Appointment not found'}), 404)
+        user_id = get_jwt_identity()
+        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        if not appt:
+            return make_response(jsonify({'error': 'Not found'}), 404)
 
         data = appointment_patch_parser.parse_args()
-
         if data['appointment_date']:
-            appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
-            appointment.appointment_date = appointment_date
-
+            try:
+                appt.appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
+            except ValueError:
+                return make_response(jsonify({"error": "Invalid appointment_date"}), 400)
         if data['appointment_time']:
-            appointment_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
-            appointment.appointment_time = appointment_time
-
-        if data['client_id'] is not None:
-            appointment.client_id = data['client_id']
-
+            try:
+                appt.appointment_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
+            except ValueError:
+                return make_response(jsonify({"error": "Invalid appointment_time"}), 400)
         if data['notes'] is not None:
-            appointment.notes = data['notes']
+            appt.notes = data['notes']
 
         db.session.commit()
-
-        return make_response(jsonify(appointment_schema.dump(appointment)), 200)
+        return make_response(jsonify(serialize_appointment(appt)), 200)
 
     @jwt_required()
     def delete(self, id):
-        appointment = Appointment.query.get(id)
-        if not appointment:
-            return make_response(jsonify({'message': 'Appointment not found'}), 404)
-        db.session.delete(appointment)
+        user_id = get_jwt_identity()
+        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        if not appt:
+            return make_response(jsonify({'error': 'Not found'}), 404)
+
+        db.session.delete(appt)
         db.session.commit()
-        return make_response(jsonify({'message': 'Appointment deleted successfully'}), 200)
+        return make_response(jsonify({'message': 'Deleted'}), 200)
 
 api.add_resource(AppointmentByID, '/appointment/<int:id>')
