@@ -2,7 +2,8 @@ from flask import Blueprint, jsonify, make_response
 from flask_restful import Api, Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
-from models import Appointment, db
+from models import User, Appointment, db
+from serializer import appointments_schema
 
 appointment_bp = Blueprint('appointment_bp', __name__)
 api = Api(appointment_bp)
@@ -34,10 +35,6 @@ def serialize_appointment(appt):
         } if appt.client else None
     }
 
-from models import User, Appointment, db
-from flask_jwt_extended import get_jwt_identity, jwt_required
-from serializer import appointments_schema
-from flask import jsonify, make_response
 
 class Appointments(Resource):
     @jwt_required()
@@ -48,12 +45,11 @@ class Appointments(Resource):
         if not user:
             return make_response(jsonify({"error": "User not found"}), 404)
 
-        # ✅ Psychologists/admins see all appointments
+        # Psychologists/admins see all appointments
         if user.is_psychologist:
             appointments = Appointment.query.all()
         else:
             appointments = Appointment.query.filter_by(client_id=user_id).all()
-
 
         result = [serialize_appointment(a) for a in appointments]
         return make_response(jsonify(result), 200)
@@ -62,6 +58,10 @@ class Appointments(Resource):
     def post(self):
         data = appointment_parser.parse_args()
         user_id = get_jwt_identity()
+
+        user = User.query.get(user_id)
+        if not user:
+            return make_response(jsonify({"error": "User not found"}), 404)
 
         appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
         appointment_time = datetime.strptime(data['appointment_time'], '%H:%M:%S').time()
@@ -85,17 +85,36 @@ class AppointmentByID(Resource):
     @jwt_required()
     def get(self, id):
         user_id = get_jwt_identity()
-        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        user = User.query.get(user_id)
+
+        if not user:
+            return make_response(jsonify({"error": "User not found"}), 404)
+
+        appt = Appointment.query.get(id)
         if not appt:
             return make_response(jsonify({'error': 'Not found'}), 404)
+
+        # Only the owner or a psychologist can view
+        if not user.is_psychologist and appt.client_id != user_id:
+            return make_response(jsonify({"error": "Unauthorized"}), 403)
+
         return make_response(jsonify(serialize_appointment(appt)), 200)
 
     @jwt_required()
     def patch(self, id):
         user_id = get_jwt_identity()
-        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        user = User.query.get(user_id)
+
+        if not user:
+            return make_response(jsonify({"error": "User not found"}), 404)
+
+        appt = Appointment.query.get(id)
         if not appt:
             return make_response(jsonify({'error': 'Not found'}), 404)
+
+        # Only the owner or a psychologist can edit
+        if not user.is_psychologist and appt.client_id != user_id:
+            return make_response(jsonify({"error": "Unauthorized"}), 403)
 
         data = appointment_patch_parser.parse_args()
         if data['appointment_date']:
@@ -117,9 +136,18 @@ class AppointmentByID(Resource):
     @jwt_required()
     def delete(self, id):
         user_id = get_jwt_identity()
-        appt = Appointment.query.filter_by(id=id, client_id=user_id).first()
+        user = User.query.get(user_id)
+
+        if not user:
+            return make_response(jsonify({"error": "User not found"}), 404)
+
+        appt = Appointment.query.get(id)
         if not appt:
             return make_response(jsonify({'error': 'Not found'}), 404)
+
+        # Only the owner or a psychologist can delete
+        if not user.is_psychologist and appt.client_id != user_id:
+            return make_response(jsonify({"error": "Unauthorized"}), 403)
 
         db.session.delete(appt)
         db.session.commit()
